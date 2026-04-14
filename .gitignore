@@ -1,0 +1,6 @@
+.dobot
+/이전버전들
+**/__pycache__
+/model.pt
+chess_calib.json
+vision_robot_calib.json

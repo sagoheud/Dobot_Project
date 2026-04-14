@@ -1,0 +1,17 @@
+.dobot
+/이전버전들
+**/__pycache__
+테스트용.py
+venv/
+.venv/
+env/
+.env/
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+*.pt
+*\251.py

@@ -8,8 +8,8 @@ config.py
 # ─────────────────────────────────────────────────────────────
 # 듀얼 도봇 포트
 # ─────────────────────────────────────────────────────────────
-DOBOT_PORT_A  = "/dev/ttyUSB0"   # 왼쪽 로봇A (a~f 열)
-DOBOT_PORT_B  = "/dev/ttyUSB1"   # 오른쪽 로봇B (c~h 열)
+DOBOT_PORT_A = "/dev/ttyUSB_ROBOT_A"
+DOBOT_PORT_B = "/dev/ttyUSB_ROBOT_B"
 DOBOT_VERBOSE = False
 
 # ─────────────────────────────────────────────────────────────

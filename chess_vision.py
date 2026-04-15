@@ -217,7 +217,6 @@ class ChessVision:
         for box in results.boxes:
             cls_id = int(box.cls[0])
             cls_name = self.yolo_model.names[cls_id]
-            label = YOLO_TO_LABEL.get(cls_name)
             conf = float(box.conf[0])
             if conf < 0.4:
                 continue
@@ -236,11 +235,11 @@ class ChessVision:
             wx, wy = warped_pt
 
             cell = 800 / 8
-            col = 7 - int(wy // cell)
-            row = 7 - int(wx // cell)
+            col = int(wx // cell)        # wx: 수평(a~h), 0=a열, 7=h열
+            row = int(wy // cell)        # wy: 수직(8~1), 0=rank8, 7=rank1
             if 0 <= col <= 7 and 0 <= row <= 7:
                 file = FILES[col]
-                rank = RANKS[row]
+                rank = RANKS[7 - row]   # row=0 → rank8, row=7 → rank1
                 square = f"{file}{rank}"
                 # 같은 칸에 여러 탐지 시 confidence 높은 것 선택
                 conf = float(box.conf[0])

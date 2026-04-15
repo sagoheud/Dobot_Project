@@ -75,10 +75,6 @@ _CELL_A = config.BOARD_MM_A / 8
 _CELL_B = config.BOARD_MM_B / 8
 
 
-def flip_rank(sq: str) -> str:
-    return sq[0] + str(9 - int(sq[1]))
-
-
 # ─────────────────────────────────────────────────────────────
 # 로봇 식별자
 # ─────────────────────────────────────────────────────────────
@@ -143,8 +139,6 @@ class DualDobotController:
         self.log = log_fn
         self._ra = RobotState(Robot.A, DOBOT_PORT_A, HOME_A_X, HOME_A_Y, HOME_A_R)
         self._rb = RobotState(Robot.B, DOBOT_PORT_B, HOME_B_X, HOME_B_Y, HOME_B_R)
-        self._gy_idx_a = 0
-        self._gy_idx_b = 0
 
     # ─────────────────────────────────────────────────────────
     # 초기화 / 종료
@@ -254,11 +248,7 @@ class DualDobotController:
         self,
         board: chess.Board,
         move: chess.Move,
-        log_fn: Optional[Callable] = None,
     ) -> None:
-        if log_fn:
-            self.log = log_fn
-
         uci = move.uci()
         from_sq = uci[:2]
         to_sq = uci[2:4]
@@ -378,7 +368,6 @@ class DualDobotController:
         to_mm: tuple,
         label: str = "",
     ) -> None:
-        global _abort_flag
         if _abort_flag:
             raise RuntimeError("동작 중단 요청됨")
 

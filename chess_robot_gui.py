@@ -551,10 +551,14 @@ class ChessRobotGUI:
     # 비전 모드면 vision pick/place 사용, 아니면 수동 좌표
     # ─────────────────────────────────────────────────────────
     def _execute_castling_rook(self, move: chess.Move) -> None:
-        if self.board.turn == chess.WHITE:
+        # board.push(move) 이전에 호출되므로 board.turn = 현재 수를 두는 색
+        mover_is_white = self.board.turn == chess.WHITE
+        if mover_is_white:
             rook_from, rook_to = ("h1", "f1") if move.to_square == chess.G1 else ("a1", "d1")
+            rook_label = "wR"
         else:
             rook_from, rook_to = ("h8", "f8") if move.to_square == chess.G8 else ("a8", "d8")
+            rook_label = "bR"
 
         from_row = RANKS.index(rook_from[1])
         to_row   = RANKS.index(rook_to[1])
@@ -563,7 +567,7 @@ class ChessRobotGUI:
         if isinstance(self.dual_ctrl, VisionGuidedController):
             # 비전 모드: vision pick/place 사용
             robot = worker if worker else (Robot.A if from_row >= ROW_A_MIN else Robot.B)
-            from_mm = self.dual_ctrl._vision_pick_mm(rook_from, robot, "wR" if self.board.turn == chess.WHITE else "bR")
+            from_mm = self.dual_ctrl._vision_pick_mm(rook_from, robot, rook_label)
             to_mm   = self.dual_ctrl._vision_place_mm(rook_to, robot)
         else:
             # 수동 모드
@@ -620,6 +624,15 @@ class ChessRobotGUI:
         to_sq   = self.entry_to.get().strip().lower()
         if not from_sq or not to_sq:
             self.log("출발/도착 칸 입력 필요", "warn")
+            return
+        if len(from_sq) < 2 or len(to_sq) < 2:
+            self.log("칸 표기 오류 (예: e2, d4)", "warn")
+            return
+        if from_sq[0] not in "abcdefgh" or from_sq[1] not in "12345678":
+            self.log(f"출발 칸 오류: {from_sq}", "warn")
+            return
+        if to_sq[0] not in "abcdefgh" or to_sq[1] not in "12345678":
+            self.log(f"도착 칸 오류: {to_sq}", "warn")
             return
         if self.robot_busy:
             self.log("도봇 사용 중", "warn")

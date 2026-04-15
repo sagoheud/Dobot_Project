@@ -179,8 +179,10 @@ class ChessEngine:
         if pov.is_mate():
             return f"Mate in {pov.mate()}"
         cp = pov.score()
+        if cp is None:
+            return ""
         side = "백" if turn == chess.WHITE else "흑"
-        sign = "+" if cp and cp > 0 else ""
+        sign = "+" if cp > 0 else ""
         return f"{sign}{cp / 100:.2f}  ({side} 차례)"
 
 

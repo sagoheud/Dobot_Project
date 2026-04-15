@@ -13,8 +13,6 @@ YOLO 모드:
 
 from typing import Callable, Optional
 
-import cv2
-import numpy as np
 import chess
 
 from dual_dobot_controller import (
@@ -22,7 +20,7 @@ from dual_dobot_controller import (
     Robot,
     square_to_mm_for,
     ROW_A_MIN, ROW_A_MAX,
-    FILES, RANKS,
+    RANKS,
 )
 from vision_coord import VisionRobotCalib
 import config
@@ -104,16 +102,14 @@ class VisionGuidedController(DualDobotController):
                     x_mm += config.YOLO_PICK_OFFSET_A_X
                     y_mm += config.YOLO_PICK_OFFSET_A_Y
                 self.log(f"[YOLO] {square.upper()} 실제위치 픽셀({wx:.0f},{wy:.0f}) → ({x_mm:.1f},{y_mm:.1f})mm", "info")
-                return (round(x_mm, 1), round(y_mm, 1))  # ← 추가
+                return (round(x_mm, 1), round(y_mm, 1))
             else:
                 self.log(f"[YOLO] {square.upper()} 탐지 실패 → 칸 중심으로 이동", "warn")
 
-            return self._get_center_mm(square, robot)
+        return self._get_center_mm(square, robot)
 
     # ── 놓기 위치 mm ─────────────────────────────────────────
     def _get_place_mm(self, square: str, robot: Robot) -> tuple:
-        if not self.use_vision or not self.calib.is_ready:
-            return square_to_mm_for(robot, square)
         return square_to_mm_for(robot, square)
 
     # ── execute_move 오버라이드 ───────────────────────────────
